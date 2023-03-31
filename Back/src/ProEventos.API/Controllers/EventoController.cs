@@ -1,61 +1,56 @@
 using Microsoft.AspNetCore.Mvc;
+using ProEventos.API.Data;
 using ProEventos.API.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ProEventos.API.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class EventoController : ControllerBase
+namespace ProEventos.API.Controllers
 {
-    private IEnumerable<Evento> _evento = new Evento[] {
-            new Evento(){
-                EventoId = 1,
-                Tema = "Angular e .NET",
-                Local = "São Paulo",
-                Lote = "1 lote",
-                QuantidadePessoas = 300,
-                DataEvento = "29/03/1996"
-            },
-            new Evento(){
-                EventoId = 2,
-                Tema = "Angular e .NET 2",
-                Local = "São Paulo",
-                Lote = "2 lote",
-                QuantidadePessoas = 300,
-                DataEvento = "30/03/2023"
-            }
-        };
-    public EventoController()
-    {
-    }
 
-    [HttpGet]
-    public IEnumerable<Evento> Get()
+    [ApiController]
+    [Route("api/[controller]")]
+    public class EventoController : ControllerBase
     {
-        return _evento;
-    }
+        private readonly DataContext _context;
 
-    [HttpGet("{id}")]
-    public IEnumerable<Evento> Get(int id)
-    {
-        return _evento.Where(e => e.EventoId == id);
-    }
+        public EventoController(DataContext context)
+        {
+                _context = context;
+        }
 
-    [HttpPost]
-    public string Post()
-    {
-        return "exemplo post";
-    }
+        [HttpGet]
+        public IEnumerable<Evento> Get()
+        {
+            return _context.Eventos;
+        }
 
-    [HttpPut("{id}")]
-    public string Put(int id)
-    {
-        return $"exemplo Put id {id}";
-    }
+        [HttpGet("{id}")]
+        public Evento Get(int id)
+        {
+            return _context.Eventos.Find(id);
+        }
 
-    [HttpDelete("{id}")]
-    public string Delete(int id)
-    {
-        return $"exemplo Delete {id}";
+        [HttpPost]
+        public string Post()
+        {
+            return "exemplo post";
+        }
+
+        [HttpPut("{id}")]
+        public string Put(int id)
+        {
+            return $"exemplo Put id {id}";
+        }
+
+        [HttpDelete("{id}")]
+        public string Delete(int id)
+        {
+            return $"exemplo Delete {id}";
+        }
     }
 }
+
+
