@@ -1,7 +1,64 @@
-<h1>Eventos Component</h1>
+<h2>Eventos</h2>
+<hr>
 
-<div *ngFor="let item of eventos">
+<div  class="form-inline">
+  <div class="form-group mb-2">
+    <label for="txtBuscar" class="mr-2">Filtro</label>
+    <input id="txtBuscar" [(ngModel)]="filtro" type="text" class="form-control mr-2" placeholder="Buscar">
+  </div>
+</div>
+<!-- <p>filtro: {{filtro}}</p> -->
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>#</th>
+      <th><button type="button" class="btn btn-outline-light btn-sm" (click)="exibirImagem = !exibirImagem">{{exibirImagem ? 'Ocultar Imagem' : 'Exibir Imagem'}}</button></th>
+      <th>Tema</th>
+      <th>Local</th>
+      <th>Data</th>
+      <th>Qtd Pessoas</th>
+      <th>Lote</th>
+      <th>Opções</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="eventos && eventos.length">
+    <tr *ngFor="let item of eventosFiltrados">
+      <td>{{item.eventoId}}</td>
+      <td>
+        <img [collapse]="!exibirImagem" [isAnimated]="true" src="/assets/{{item.imagemURL}}" [style.width.px]="widthImg" [style.margin.px]="marginImg">
+        <!-- collapse ou *ngIf="mostrarImagem" -->
+      </td>
+      <td>{{item.tema}}</td>
+      <td>{{item.local}}</td>
+      <td>{{item.dataEvento}}</td>
+      <td>{{item.quantidadePessoas}}</td>
+      <td>{{item.lote}}</td>
+      <td>
+        <button type="button" class="btn btn-primary btn-sm mr-2">Editar</button>
+        <button type="button" class="btn btn-danger btn-sm">Excluir</button>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot *ngIf="!eventos.length">
+    <tr>
+      <td colspan="8">
+        <h4>Nenhum evento encontrado</h4>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<!-- ver o retorno do get no formato json -> {{eventos | json}} -->
+<!-- <div *ngFor="let item of eventos">
   <p><b>Tema: </b>{{item.tema}}</p>
   <p><b>Local: </b>{{item.local}}</p>
   <hr/>
-</div>
+</div> -->
+
+<!-- diretivas estruturais
+ex: *ngFor, *ngIf, *ngShow
+
+binding e interpolação
+{{eventos[0].tema}} -> interpolação
+{{eventos[0].tema + 'teste'}} -> interpolação
+-->

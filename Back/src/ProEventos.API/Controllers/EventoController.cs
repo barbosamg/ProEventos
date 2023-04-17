@@ -34,9 +34,11 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public string Post()
+        public string Post(Evento evento)
         {
-            return "exemplo post";
+            _context.Eventos.Add(evento);
+            var salvou = _context.SaveChanges();
+            return $"Salvou: {salvou}";
         }
 
         [HttpPut("{id}")]
