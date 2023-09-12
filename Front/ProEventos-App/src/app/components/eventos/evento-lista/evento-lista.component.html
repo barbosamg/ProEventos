@@ -44,7 +44,7 @@
         <td class="d-none d-md-table-cell">{{item.quantidadePessoas}}</td>
         <td class="d-none d-md-table-cell">{{item.lotes[0].nome}}</td>
         <td>
-          <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar">
+          <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar" (click)="detalheEvento(item.id)">
             <i class="fa fa-edit"></i>
           </button>
           <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal(template)">
