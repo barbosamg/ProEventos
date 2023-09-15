@@ -22,6 +22,10 @@ export class PerfilComponent implements OnInit {
     this.validation();
   }
 
+  onSubmit(event: any): any{
+    if(this.form.invalid) return;
+  }
+
   private validation(): void{
     const formOptions: AbstractControlOptions = { validators: ValidatorField.MustMatch('senha', 'confirmeSenha') };
 
@@ -38,7 +42,8 @@ export class PerfilComponent implements OnInit {
     }, formOptions);
   }
 
-  public resetForm(): void{
+  public resetForm(event: any): void{
+    event.preventDefault();
     this.form.reset();
   }
 
