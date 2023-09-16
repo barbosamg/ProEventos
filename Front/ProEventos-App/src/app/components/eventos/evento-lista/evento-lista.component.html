@@ -42,7 +42,7 @@
         <td class="d-none d-md-table-cell">{{item.local}}</td>
         <td>{{item.dataEvento | DateTimeFormat}}</td>
         <td class="d-none d-md-table-cell">{{item.quantidadePessoas}}</td>
-        <td class="d-none d-md-table-cell">{{item.lotes[0].nome}}</td>
+        <td class="d-none d-md-table-cell">{{item.lotes ? item.lotes[0].nome : ''}}</td>
         <td>
           <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar" (click)="detalheEvento(item.id)">
             <i class="fa fa-edit"></i>
