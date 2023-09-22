@@ -111,7 +111,7 @@ namespace ProEventos.API.Controllers
                 var excluiu = await _eventoService.DeleteEvento(id);
                 if (!excluiu) return BadRequest("Erro ao tentar deletar um evento");
 
-                return Ok("Evento excluido com sucesso");
+                return Ok(new { message = "Deletado", sucesso = true});
             }
             catch (System.Exception ex)
             {

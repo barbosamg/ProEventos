@@ -9,16 +9,16 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-evento-lista',
   templateUrl: './evento-lista.component.html',
-  styleUrls: ['./evento-lista.component.scss']
+  styleUrls: ['./evento-lista.component.scss'],
 })
 export class EventoListaComponent implements OnInit {
-
   public eventos: Evento[] = [];
   public eventosFiltrados: Evento[] = [];
   public widthImg: number = 50;
   public marginImg: number = 2;
   public exibirImagem: boolean = true;
   private _filtro: string = '';
+  public eventoId: number = 0;
 
   modalRef?: BsModalRef;
 
@@ -33,18 +33,20 @@ export class EventoListaComponent implements OnInit {
       : this.eventos;
   }
 
-  constructor(private eventoService: EventoService,
-              private modalService: BsModalService,
-              private toastr: ToastrService,
-              private spinner: NgxSpinnerService,
-              private router: Router) {}
+  constructor(
+    private eventoService: EventoService,
+    private modalService: BsModalService,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService,
+    private router: Router
+  ) {}
 
   public ngOnInit(): void {
     this.spinner.show();
-    this.getEventos();
+    this.carregarEventos();
   }
 
-  public getEventos(): void {
+  public carregarEventos(): void {
     this.eventoService.getEventos().subscribe({
       next: (response: Evento[]) => {
         this.eventos = response;
@@ -54,11 +56,12 @@ export class EventoListaComponent implements OnInit {
         this.spinner.hide();
         this.toastr.error('Erro ao carregar os eventos', 'Erro!');
         console.log(error);
-      },
-      complete: () => {
-          this.spinner.hide();
       }
-  });
+      //com o add posso remover o complete
+      // complete: () => {
+      //   this.spinner.hide();
+      // },
+    }).add(() => this.spinner.hide());
   }
 
   private filtrarEventos(filtro: string): Evento[] {
@@ -72,20 +75,34 @@ export class EventoListaComponent implements OnInit {
     );
   }
 
-  openModal(template: TemplateRef<any>): void {
-    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  openModal(template: TemplateRef<any>, eventoId: number): void {
+    this.eventoId = eventoId;
+    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
   confirm(): void {
     this.modalRef?.hide();
-    this.toastr.success('Evento foi deletado com sucesso', 'Deletado!');
+    this.spinner.show();
+
+    this.eventoService.deleteEvento(this.eventoId).subscribe(
+      (response: any) => {
+        if (response.sucesso) {
+          this.toastr.success(`Evento ${this.eventoId} foi deletado com sucesso`,'Deletado!');
+          this.carregarEventos();
+        }
+      },
+      (error: any) => {
+        this.toastr.error(`Erro ao deletar evento ${this.eventoId}`, 'Erro!');
+        console.error(error);
+      }
+    ).add(() => this.spinner.hide());
   }
 
   decline(): void {
     this.modalRef?.hide();
   }
 
-  detalheEvento(id: number): void{
-    this.router.navigate([`/eventos/detalhe/${id}`])
+  detalheEvento(id: number): void {
+    this.router.navigate([`/eventos/detalhe/${id}`]);
   }
 }

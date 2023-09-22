@@ -7,7 +7,7 @@
     <div class="form-row">
       <div class="form-group col-md-12">
         <label>Tema</label>
-        <input type="text" [ngClass]="{'is-invalid': f.tema.errors && f.tema.touched}" class="form-control" formControlName="tema" placeholder="Insira o Tema">
+        <input type="text" [ngClass]="cssValidator(f.tema)" class="form-control" formControlName="tema" placeholder="Insira o Tema">
         <div *ngIf="f.tema.errors?.required" class="invalid-feedback">Tema é obrigatório</div>
         <div *ngIf="f.tema.errors?.minlength" class="invalid-feedback">Tema deve ter no mínimo 4 caracteres</div>
         <div *ngIf="f.tema.errors?.maxlength" class="invalid-feedback">Tema deve ter no máximo 50 caracteres</div>
@@ -16,36 +16,43 @@
     <div class="form-row">
       <div class="form-group col-md-8">
         <label>Local</label>
-        <input type="text" [ngClass]="{'is-invalid' : f.local.errors && f.local.touched}" class="form-control" formControlName="local" placeholder="">
+        <input type="text" [ngClass]="cssValidator(f.local)" class="form-control" formControlName="local" placeholder="">
         <div *ngIf="f.local.errors?.required && f.local.touched" class="invalid-feedback">Local é obrigatório</div>
       </div>
       <div class="form-group col-md-4">
         <label>Data e Hora</label>
-        <input type="datetime" [ngClass]="{'is-invalid' : f.dataEvento.errors && f.dataEvento.touched}" class="form-control" formControlName="dataEvento" placeholder="">
+        <input type="datetime"
+                [ngClass]="cssValidator(f.dataEvento)"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+
+                class="form-control"
+                formControlName="dataEvento"
+                placeholder="Digite a data">
         <div *ngIf="f.dataEvento.errors?.required && f.dataEvento.touched" class="invalid-feedback">Data e Hora é obrigatório</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-md-2">
         <label>Qtd Pessoas</label>
-        <input type="number" [ngClass]="{'is-invalid': f.quantidadePessoas.errors && f.quantidadePessoas.touched}" class="form-control" formControlName="quantidadePessoas" placeholder="">
+        <input type="number" [ngClass]="cssValidator(f.quantidadePessoas)" class="form-control" formControlName="quantidadePessoas" placeholder="">
         <div *ngIf="f.quantidadePessoas.errors?.required && f.quantidadePessoas.touched" class="invalid-feedback">Qtd Pessoas é obrigatório</div>
         <div *ngIf="f.quantidadePessoas.errors?.max" class="invalid-feedback">Qtd Pessoas é até 120000</div>
       </div>
       <div class="form-group col-md-2">
         <label>Telefone</label>
-        <input type="text" [ngClass]="{'is-invalid': f.telefone.errors && f.telefone.touched}" class="form-control" formControlName="telefone" placeholder="(000) 90000-0000">
+        <input type="text" [ngClass]="cssValidator(f.telefone)" class="form-control" formControlName="telefone" placeholder="(000) 90000-0000">
         <div *ngIf="f.telefone.errors?.required && f.telefone.touched" class="invalid-feedback">Telefone é obrigatório</div>
       </div>
       <div class="form-group col-md-4">
         <label>Email</label>
-        <input type="text" [ngClass]="{'is-invalid' : f.email.errors && f.email.touched}" class="form-control" formControlName="email" placeholder="e-mail">
+        <input type="text" [ngClass]="cssValidator(f.email)" class="form-control" formControlName="email" placeholder="e-mail">
         <div *ngIf="f.email.errors?.required" class="invalid-feedback">E-mail é obrigatório</div>
         <div *ngIf="f.email.errors?.email" class="invalid-feedback">E-mail precisa estar no formato correto</div>
       </div>
       <div class="form-group col-md-4">
         <label>Imagem</label>
-        <input type="text" [ngClass]="{'is-invalid' : f.imagemURL.errors && f.imagemURL.touched}" class="form-control" formControlName="imagemURL" placeholder="Imagem">
+        <input type="text" [ngClass]="cssValidator(f.imagemURL)" class="form-control" formControlName="imagemURL" placeholder="Imagem">
         <div *ngIf="f.imagemURL.errors?.required && f.imagemURL.touched" class="invalid-feedback">Imagem é obrigatório</div>
       </div>
     </div>
@@ -55,9 +62,13 @@
       <button class="btn btn-outline-secondary mr-auto border" (click)="resetForm()">
         Cancelar Alteração
       </button>
-      <button class="btn btn-success" [disabled]="!form.valid">
-        <span class="spinner-border spinner-border-sm mr-1"></span>
+      <button class="btn btn-success" [disabled]="!form.valid" (click)="salvarEvento()" *ngIf="!modoEdicao">
+        <span class="spinner-border spinner-border-sm mr-1" *ngIf="spinnerSalvar"></span>
         Salvar Evento
+      </button>
+      <button class="btn btn-success" [disabled]="!form.valid" (click)="alterarEvento()" *ngIf="modoEdicao">
+        <span class="spinner-border spinner-border-sm mr-1" *ngIf="spinnerSalvar"></span>
+        Alterar Evento
       </button>
     </div>
   </div>

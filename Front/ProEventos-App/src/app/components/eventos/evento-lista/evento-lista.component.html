@@ -34,7 +34,7 @@
       <tr *ngFor="let item of eventosFiltrados">
         <td>{{item.id}}</td>
         <td class="d-none d-md-table-cell">
-          <img [collapse]="!exibirImagem" [isAnimated]="true" src="/assets/{{item.imagemURL}}"
+          <img [collapse]="!exibirImagem" [isAnimated]="true" src="./assets/{{item.imagemURL}}"
             [style.width.px]="widthImg" [style.margin.px]="marginImg">
           <!-- collapse ou *ngIf="mostrarImagem" -->
         </td>
@@ -42,12 +42,12 @@
         <td class="d-none d-md-table-cell">{{item.local}}</td>
         <td>{{item.dataEvento | DateTimeFormat}}</td>
         <td class="d-none d-md-table-cell">{{item.quantidadePessoas}}</td>
-        <td class="d-none d-md-table-cell">{{item.lotes ? item.lotes[0].nome : ''}}</td>
+        <td class="d-none d-md-table-cell">{{item.lotes[0]?.nome}}</td>
         <td>
           <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar" (click)="detalheEvento(item.id)">
             <i class="fa fa-edit"></i>
           </button>
-          <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal(template)">
+          <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal(template, item.id)">
             <i class="fa fa-trash"></i>
           </button>
         </td>
@@ -63,12 +63,10 @@
   </table>
 </div>
 
-
-
 <!-- MODAL WINDOW CONFIRM -->
 <ng-template #template>
   <div class="modal-body text-center">
-    <p>Tem certeza que deseja excluir?</p>
+    <p>Tem certeza que deseja excluir o evento {{eventoId}}?</p>
     <button type="button" class="btn btn-default" (click)="confirm()">Sim</button>
     <button type="button" class="btn btn-primary" (click)="decline()">Não</button>
   </div>
