@@ -72,7 +72,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(EventoDto evento)
+        public async Task<IActionResult> Post(LoteDto evento)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, EventoDto evento)
+        public async Task<IActionResult> Put(int id, LoteDto evento)
         {
             try
             {
