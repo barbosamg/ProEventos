@@ -72,14 +72,14 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(LoteDto evento)
+        public async Task<IActionResult> Post(EventoDto evento)
         {
             try
             {
-                var salvou = await _eventoService.AddEvento(evento);
-                if(salvou == null) return BadRequest("Erro ao tentar criar um evento");
+                var eventoSalvo = await _eventoService.AddEvento(evento);
+                if(eventoSalvo == null) return BadRequest("Erro ao tentar criar um evento");
 
-                return Ok(evento);
+                return Ok(eventoSalvo);
             }
             catch (System.Exception ex)
             {
@@ -88,7 +88,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, LoteDto evento)
+        public async Task<IActionResult> Put(int id, EventoDto evento)
         {
             try
             {

@@ -5,11 +5,11 @@ namespace ProEventos.Application.Interfaces
 {
     public interface IEventoService
     {
-        Task<LoteDto> AddEvento(LoteDto evento);
-        Task<LoteDto> UpdateEvento(int eventoId, LoteDto evento);
+        Task<EventoDto> AddEvento(EventoDto evento);
+        Task<EventoDto> UpdateEvento(int eventoId, EventoDto evento);
         Task<bool> DeleteEvento(int eventoId);
-        Task<LoteDto[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false);
-        Task<LoteDto[]> GetAllEventosAsync(bool includePalestrantes = false);
-        Task<LoteDto> GetEventoByIdAsync(int eventoId, bool includePalestrantes = false);
+        Task<EventoDto[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false);
+        Task<EventoDto[]> GetAllEventosAsync(bool includePalestrantes = false);
+        Task<EventoDto> GetEventoByIdAsync(int eventoId, bool includePalestrantes = false);
     }
 }
