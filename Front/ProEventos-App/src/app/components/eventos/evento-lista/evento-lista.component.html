@@ -34,7 +34,7 @@
       <tr *ngFor="let item of eventosFiltrados">
         <td>{{item.id}}</td>
         <td class="d-none d-md-table-cell">
-          <img [collapse]="!exibirImagem" [isAnimated]="true" src="./assets/{{item.imagemURL}}"
+          <img [collapse]="!exibirImagem" [isAnimated]="true" [src]="mostrarImg(item.imagemURL)"
             [style.width.px]="widthImg" [style.margin.px]="marginImg">
           <!-- collapse ou *ngIf="mostrarImagem" -->
         </td>

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Evento } from '../models/Evento';
 import { take } from 'rxjs/operators';
+import { environment } from '@environments/environment';
 
 /* pipe(take1)) serve para desinscrever o observable, take(1) dentro do pipe vai permitir que o observable seja chamado apenas 1 vez antes de ser completado,
 isso quer dizer que, mesmo que a sua inscrição (subscribe) ainda esteja lá no seu observable, o take(quatidade de vezes)
@@ -14,7 +15,7 @@ https://rxjs.dev/api/operators/take*/
 // })
 @Injectable()
 export class EventoService {
-  private baseURL: string = 'https://localhost:7082/api/evento';
+  private baseURL: string = environment.apiURL + 'api/evento';
 
   constructor(private http: HttpClient) {}
 
@@ -44,5 +45,15 @@ export class EventoService {
 
   public deleteEvento(id: number): Observable<any> {
     return this.http.delete(`${this.baseURL}/${id}`).pipe(take(1));
+  }
+
+  public postUploadImg(eventoID: number, file: File): Observable<Evento> {
+    const fileToUpload = file[0] as File;
+    const formData = new FormData();
+    formData.append('file', fileToUpload);
+
+    return this.http
+                .post<Evento>(`${this.baseURL}/upload-image/${eventoID}`, formData)
+                .pipe(take(1));
   }
 }

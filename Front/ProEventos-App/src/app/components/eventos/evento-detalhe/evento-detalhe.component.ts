@@ -18,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Lote } from '@app/models/Lote';
 import { LoteService } from '@app/services/lote.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-evento-detalhe',
@@ -35,6 +36,8 @@ export class EventoDetalheComponent implements OnInit {
   modalRef?: BsModalRef;
   loteAtual: Lote = {} as Lote;
   indiceLoteAtual: number = 0;
+  imagemURL = 'assets/upload.png';
+  fileImg: File;
 
   get f(): any {
     return this.form.controls;
@@ -97,7 +100,7 @@ export class EventoDetalheComponent implements OnInit {
       quantidadePessoas: ['', [Validators.required, Validators.max(120000)]],
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      imagemURL: ['', Validators.required],
+      imagemURL: [''],
       lotes: this.formBuilder.array([]),
     });
   }
@@ -135,6 +138,11 @@ export class EventoDetalheComponent implements OnInit {
           const dateJS: Date = dateMoment.toDate();
           this.evento.dataEvento = dateJS;
           this.form.patchValue(this.evento);
+
+          if(this.evento.imagemURL !== ''){
+            this.imagemURL = environment.apiURLImg + this.evento.imagemURL;
+          }
+
           this.carregarLote();
           // this.carregarLotes();
         },
@@ -279,6 +287,28 @@ export class EventoDetalheComponent implements OnInit {
 
   public getTituloLote(tituloLote: string | null): string{
     return tituloLote === null || tituloLote === '' ? 'Nome lote' : tituloLote;
+  }
+
+  onImgChange(evento: any): void{
+    const reader = new FileReader();
+    this.fileImg = evento.target.files;
+    reader.readAsDataURL(this.fileImg[0]);
+    reader.onload = (ev: any) => this.imagemURL = ev.target.result;
+    this.uploadImagem();
+  }
+
+  private uploadImagem(): void{
+    this.spinner.show();
+    this.eventoService.postUploadImg(this.eventoId, this.fileImg).subscribe(
+      () => {
+        this.carregarEvento();
+        this.toastr.success('Imagem alterada com sucesso', 'Sucesso!');
+      },
+      (error) => {
+        this.toastr.error('Erro ao alterar imagem', 'Erro!');
+        console.error(error);
+      }
+    ).add(() => this.spinner.hide());
   }
 }
 

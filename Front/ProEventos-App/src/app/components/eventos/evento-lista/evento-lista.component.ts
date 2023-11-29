@@ -5,6 +5,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-evento-lista',
@@ -104,5 +105,9 @@ export class EventoListaComponent implements OnInit {
 
   detalheEvento(id: number): void {
     this.router.navigate([`/eventos/detalhe/${id}`]);
+  }
+
+  mostrarImg(imagemURL: string): string{
+    return imagemURL !== '' ? `${environment.apiURLImg}${imagemURL}` : 'assets/sem-imagem.jpeg'
   }
 }
