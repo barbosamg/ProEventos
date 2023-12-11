@@ -1,29 +1,31 @@
-using Microsoft.AspNetCore.Mvc;
-using ProEventos.Domain;
-using ProEventos.Application.Interfaces;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-using ProEventos.Application.Dtos;
-using System.IO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using ProEventos.API.Extensions;
+using ProEventos.Application.Dtos;
+using ProEventos.Application.Interfaces;
 using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProEventos.API.Controllers
 {
-
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EventoController : ControllerBase
     {
         private readonly IEventoService _eventoService;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IAccountService _accountService;
 
-        public EventoController(IEventoService eventoService, IWebHostEnvironment hostEnvironment)
+        public EventoController(IEventoService eventoService, IWebHostEnvironment hostEnvironment, IAccountService accountService)
         {
             _eventoService = eventoService;
             _hostEnvironment = hostEnvironment;
+            _accountService = accountService;
         }
 
         [HttpGet]
@@ -31,7 +33,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var eventos = await _eventoService.GetAllEventosAsync(true);
+                var eventos = await _eventoService.GetAllEventosAsync(User.GetUserId(), true);
                 if (eventos == null) return NoContent();
 
 
@@ -49,7 +51,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await _eventoService.GetEventoByIdAsync(id, true);
+                var evento = await _eventoService.GetEventoByIdAsync(User.GetUserId(), id, true);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -66,7 +68,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await _eventoService.GetAllEventosByTemaAsync(tema, true);
+                var evento = await _eventoService.GetAllEventosByTemaAsync(User.GetUserId(), tema, true);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -82,7 +84,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var eventoSalvo = await _eventoService.AddEvento(evento);
+                var eventoSalvo = await _eventoService.AddEvento(User.GetUserId(), evento);
                 if (eventoSalvo == null) return BadRequest("Erro ao tentar criar um evento");
 
                 return Ok(eventoSalvo);
@@ -98,7 +100,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await _eventoService.GetEventoByIdAsync(eventoID, true);
+                var evento = await _eventoService.GetEventoByIdAsync(User.GetUserId(), eventoID, true);
                 if (evento == null) return NoContent();
 
                 var file = Request.Form.Files[0];
@@ -109,7 +111,7 @@ namespace ProEventos.API.Controllers
                     evento.ImagemURL = await SaveImage(file);
                 }
 
-                var eventoRetorno = await _eventoService.UpdateEvento(eventoID, evento);
+                var eventoRetorno = await _eventoService.UpdateEvento(User.GetUserId(), eventoID, evento);
 
                 return Ok(eventoRetorno);
             }
@@ -124,7 +126,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var salvou = await _eventoService.UpdateEvento(id, evento);
+                var salvou = await _eventoService.UpdateEvento(User.GetUserId(), id, evento);
                 if (salvou == null) return BadRequest("Erro ao tentar atualizar um evento");
 
                 return Ok(evento);
@@ -140,10 +142,10 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await _eventoService.GetEventoByIdAsync(id);
+                var evento = await _eventoService.GetEventoByIdAsync(User.GetUserId(), id);
                 if (evento == null) return NoContent();
 
-                var excluiu = await _eventoService.DeleteEvento(id);
+                var excluiu = await _eventoService.DeleteEvento(User.GetUserId(), id);
                 if (!excluiu) {
                     throw new Exception($"Ocorreu um problema ao tenta excluir o evento {id}");
                 }

@@ -17,6 +17,7 @@ using ProEventos.Domain.Identity;
 using ProEventos.Persistence;
 using ProEventos.Persistence.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -84,9 +85,35 @@ namespace ProEventos.API
             services.AddScoped<IUserPersistence, UserPersistence>();
 
             services.AddCors();
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Autjorization header usando Bearer.
+                                    Entre com 'Bearer' [espaço] então coloque o token.
+                                    Exemplo: 'Bearer 123456abcdef'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme{
+                            Reference = new OpenApiReference
+                                            {
+                                                Type = ReferenceType.SecurityScheme,
+                                                Id = "Bearer"
+                                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
             });
         }
 

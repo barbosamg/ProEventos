@@ -7,6 +7,8 @@ namespace ProEventos.Application.Dtos
     public class EventoDto
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
+        public UserDto UserDto { get; set; }
         public string Local { get; set; } = "";
         public string DataEvento { get; set; } = "";
 
